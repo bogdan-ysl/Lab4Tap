@@ -1,0 +1,92 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ComplexArray {
+    public static void main(String[] args) {
+        ComplexArrayFrame frame = new ComplexArrayFrame();
+        frame.setVisible(true);
+    }
+}
+
+class Complex {
+    private double real;
+    private double imaginary;
+
+    public Complex(double real, double imaginary) {
+        this.real = real;
+        this.imaginary = imaginary;
+    }
+
+    public Complex add(Complex other) {
+        return new Complex(this.real + other.real, this.imaginary + other.imaginary);
+    }
+
+    public Complex subtract(Complex other) {
+        return new Complex(this.real - other.real, this.imaginary - other.imaginary);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + real + " + " + imaginary + "i)";
+    }
+}
+
+class ComplexArrayFrame extends JFrame {
+    private JTextField[] realParts1, imaginaryParts1, realParts2, imaginaryParts2;
+
+    public ComplexArrayFrame() {
+        setTitle("ComplexArray - YourNameHere");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 200);
+        setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel(new GridLayout(5, 4));
+
+        JLabel label1 = new JLabel("Complex 1:");
+        panel.add(label1);
+        realParts1 = createComplexInputs(panel);
+        JLabel label2 = new JLabel("Complex 2:");
+        panel.add(label2);
+        realParts2 = createComplexInputs(panel);
+
+        JButton addButton = new JButton("Add");
+        JButton subtractButton = new JButton("Subtract");
+
+        addButton.addActionListener(e -> performOperation("Addition"));
+        subtractButton.addActionListener(e -> performOperation("Subtraction"));
+
+        panel.add(addButton);
+        panel.add(subtractButton);
+
+        add(panel);
+    }
+
+    private JTextField[] createComplexInputs(JPanel panel) {
+        JTextField[] parts = new JTextField[2];
+        for (int i = 0; i < 2; i++) {
+            parts[i] = new JTextField(5);
+            panel.add(parts[i]);
+            panel.add(new JLabel((i == 0) ? "+ " : "+ i"));
+        }
+        return parts;
+    }
+
+    private void performOperation(String operation) {
+        Complex complex1 = createComplex(realParts1);
+        Complex complex2 = createComplex(realParts2);
+        Complex result;
+        if (operation.equals("Addition")) {
+            result = complex1.add(complex2);
+        } else {
+            result = complex1.subtract(complex2);
+        }
+        JOptionPane.showMessageDialog(this, operation + " Result: " + result);
+    }
+
+    private Complex createComplex(JTextField[] parts) {
+        double real = Double.parseDouble(parts[0].getText());
+        double imaginary = Double.parseDouble(parts[1].getText());
+        return new Complex(real, imaginary);
+    }
+}
